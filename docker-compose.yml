@@ -1,0 +1,112 @@
+version: '3.8'
+
+services:
+  # Database services
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: listicle
+      POSTGRES_USER: listicle
+      POSTGRES_PASSWORD: listicle_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./scripts/init-db.sql:/docker-entrypoint-initdb.d/init-db.sql
+    networks:
+      - listicle-network
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - listicle-network
+
+  # Message queue (for future microservices)
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    environment:
+      RABBITMQ_DEFAULT_USER: listicle
+      RABBITMQ_DEFAULT_PASS: listicle_dev
+    ports:
+      - "5672:5672"
+      - "15672:15672"  # Management UI
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - listicle-network
+
+  # API Gateway (placeholder for future implementation)
+  # api-gateway:
+  #   build:
+  #     context: ./services/api-gateway
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     - DATABASE_URL=postgres://listicle:listicle_dev@postgres:5432/listicle
+  #     - REDIS_URL=redis://redis:6379
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #   networks:
+  #     - listicle-network
+
+  # User Service (placeholder for future implementation)
+  # user-service:
+  #   build:
+  #     context: ./services/user-service
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - DATABASE_URL=postgres://listicle:listicle_dev@postgres:5432/listicle
+  #     - REDIS_URL=redis://redis:6379
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #   networks:
+  #     - listicle-network
+
+  # Content Service (placeholder for future implementation)
+  # content-service:
+  #   build:
+  #     context: ./services/content-service
+  #     dockerfile: Dockerfile
+  #   environment:
+  #     - DATABASE_URL=postgres://listicle:listicle_dev@postgres:5432/listicle
+  #     - REDIS_URL=redis://redis:6379
+  #   depends_on:
+  #     - postgres
+  #     - redis
+  #   networks:
+  #     - listicle-network
+
+  # Development tools
+  mailhog:
+    image: mailhog/mailhog:latest
+    ports:
+      - "1025:1025"  # SMTP
+      - "8025:8025"  # Web UI
+    networks:
+      - listicle-network
+
+  # Monitoring (for future implementation)
+  # jaeger:
+  #   image: jaegertracing/all-in-one:latest
+  #   ports:
+  #     - "16686:16686"
+  #   environment:
+  #     - COLLECTOR_OTLP_ENABLED=true
+  #   networks:
+  #     - listicle-network
+
+volumes:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:
+
+networks:
+  listicle-network:
+    driver: bridge

@@ -1,0 +1,56 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Launch Extension (Chrome)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/ui/listicle-extension/node_modules/.bin/wxt",
+      "args": ["dev"],
+      "cwd": "${workspaceFolder}/ui/listicle-extension",
+      "console": "integratedTerminal",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "preLaunchTask": "npm: install",
+      "presentation": {
+        "group": "extension",
+        "order": 1
+      }
+    },
+    {
+      "name": "Launch Extension (Firefox)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/ui/listicle-extension/node_modules/.bin/wxt",
+      "args": ["dev", "-b", "firefox"],
+      "cwd": "${workspaceFolder}/ui/listicle-extension",
+      "console": "integratedTerminal",
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "preLaunchTask": "npm: install",
+      "presentation": {
+        "group": "extension",
+        "order": 2
+      }
+    },
+    {
+      "name": "Build Extension",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/ui/listicle-extension/node_modules/.bin/wxt",
+      "args": ["build"],
+      "cwd": "${workspaceFolder}/ui/listicle-extension",
+      "console": "integratedTerminal",
+      "env": {
+        "NODE_ENV": "production"
+      },
+      "preLaunchTask": "npm: install",
+      "presentation": {
+        "group": "extension",
+        "order": 3
+      }
+    }
+  ]
+}
